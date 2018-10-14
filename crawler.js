@@ -14,7 +14,17 @@ var fileFolder = "";
 var fileList = [];
 var lastFile = "";
 
-exports.startCrawler = function(){
+var ipaddr = "";
+
+exports.startCrawler = function(ip){
+	if(isExistLockfile()){
+		console.log("Other request is executing now. Cancel this request");
+		return;
+	}else{
+		fs.writeFileSync(lockfile, "1");
+	}
+	ipaddr = ip;
+	console.log("HOST:" + ipaddr);
 	var timer1 = setInterval(() => {
 	    if(execFlag != 0){
 			console.log("Other proc is executing now. Skip this proc"); 
@@ -30,7 +40,6 @@ exports.startCrawler = function(){
 
 		fileFolder = util.getCurrentDate();
 		var res = util.checkDir("data/" + fileFolder);
-		//console.log(res);
 
 		fs.readFile(chkfile, 'utf-8', function(err, data){
 			if(err){
@@ -39,7 +48,7 @@ exports.startCrawler = function(){
 				lastFile = data;
 				console.log("Starting crawling porc.");
 
-   	         	flashair.getlist(fileFolder).then(function(res){
+   	         	flashair.getlist(fileFolder, ipaddr).then(function(res){
 					checkFileList(res);
 					updateFileList(res);
 					if(fileList.length != 0){
@@ -54,6 +63,7 @@ exports.startCrawler = function(){
 					} else {
 						console.log("No data to get");
 						clearInterval(timer1);
+						fs.unlinkSync(lockfile);
 					};
 				});
 			}
@@ -103,3 +113,12 @@ function updateFileList(lst){
 	fileList = lst.concat();
 	console.log(fileList);
 };
+
+function isExistLockfile(){
+	try{
+		fs.statSync(lockfile);
+		return true;
+	}catch(err){
+    	if(err.code === 'ENOENT') return false;
+	} 
+}

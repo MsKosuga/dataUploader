@@ -1,23 +1,27 @@
 var http = require("http");
 var fs = require("fs");
 var request = require("request-promise");
-var basePathList = "http://10.151.50.66/command.cgi?op=100&DIR=/DCIM/";
+var basePathList = "/command.cgi?op=100&DIR=/DCIM/";
 var optionsList = {
     url: '',
     method: 'GET',
     resolveWithFullResponse: true
 };
 var optionsData = {
-	host: '10.151.50.66',
+	host: '',
 	path: '/DCIM/'
 };
 
-exports.getlist = (dirname) =>{
+exports.getlist = (dirname, ipaddr) =>{
 	return new Promise(function(result, errRes){
 	    var fileList = [];
 	    console.log("getlist");
-		optionsList.url = basePathList + dirname;
+		console.log(ipaddr);
+		optionsList.url = "http://" + ipaddr +  basePathList + dirname;
+		console.log(ipaddr);
+		optionsData.host = ipaddr;
 		console.log(optionsList.url);
+		console.log(optionsData.host);
 		request(optionsList)
     	.then((res) => {
 			txtLine = res.body.split((/\r\n|\r|\n/));

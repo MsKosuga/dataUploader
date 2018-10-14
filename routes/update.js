@@ -13,8 +13,8 @@ router.get('/', function(req, res, next) {
 			res.send('-1');
 			return;
 		}
-		console.log("ip:" + ipaddr);
-		crawler.startCrawler();
+		ipaddr = data;
+		crawler.startCrawler(ipaddr);
   		res.send('0');
 		return;
 	}
