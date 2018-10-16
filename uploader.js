@@ -1,7 +1,7 @@
 'use strict'
 var fs = require('fs');
-var util = require('./util');
 var request = require('request');
+var util = require('./util');
 
 const chkfile = "updata.dat"
 
@@ -43,9 +43,9 @@ function uploadProc(){
 
 	request.post({url:url, formData:formData}, function(err, response, body){
     	if(err){
-      		console.log(err)
+      		console.log(err);
     	}else{
-      		console.log(body)
+			console.log(body);
 			fs.writeFileSync(chkfile, files[0]);	
 			files.shift();
 			if(files.length != 0){
@@ -53,7 +53,7 @@ function uploadProc(){
 			}else{
 				console.log("uploadProc end.");
 			};
-    	};
+		};
 	});
 };
 
