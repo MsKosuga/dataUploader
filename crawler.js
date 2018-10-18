@@ -3,6 +3,8 @@ var fs = require('fs');
 var flashair = require('./flashAirUtil');
 var util = require('./util');
 
+var uploader = require('./uploader');
+
 const timerInterval = 5000;
 const chkfile = "lastdata.dat";
 const lockfile = "crawler.lock";
@@ -64,6 +66,8 @@ exports.startCrawler = function(ip){
 						console.log("No data to get");
 						clearInterval(timer1);
 						fs.unlinkSync(lockfile);
+
+						uploader.startUploader();
 					};
 				});
 			}
